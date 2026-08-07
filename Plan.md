@@ -191,9 +191,9 @@ Per frame in overlay mode: UI layer sends union of interactive screen rects (pet
 
 - [ ] **M1 — Core loop** (build on Mac; verify opaque build on Windows)
   - [x] Procedural flower assembly from `FlowerSpeciesData` (Daisy + Poppy) — *geometry + radial assembly + per-species tint + per-petal HP done; species assets exist for Daisy, Poppy, Cornflower, Dahlia (`Assets/05.Data/Flowers/`, 20 EditMode tests green)*
-  - [ ] Petal clicking, HP display, pollen/nectar, 100:1 trade — *clicking + HP labels + petal/flower destruction + species progression done (`PetalClickInput`, `FlowerProgression`); pollen/nectar economy and trade still pending. Daisy temporarily at 10 HP/petal for testability (design value: 100)*
-  - [ ] Save/load with versioning + autosave
-  - [ ] Overlay HUD + expand/collapse
+  - [x] Petal clicking, HP display, pollen/nectar, 100:1 trade — *`PetalClickInput`, `FlowerProgression`, `EconomyModel` in the new `.Core` asmdef (pure C#, `noEngineReferences`), fed by `EconomyManager`; balances are in-memory only until save lands. Daisy temporarily at 10 HP/petal for testability (design value: 100)*
+  - [x] Save/load with versioning + autosave — *`SaveModel` (versioned, UTC-stamped) in `.Core`; `SaveManager` writes two alternating JSON slots in `persistentDataPath`, autosaves every 30 s + on focus loss/quit, loads newest valid slot on start with corrupt-slot fallback. Saves: balances, helper ownership, species, per-petal HP. Offline progress derivation stays M3*
+  - [ ] Overlay HUD + expand/collapse — *expand/collapse done: the flower's centre disc toggles `UIManager`'s expanded menu (currencies, trade, helper shop stub) and `ViewportAnchor` slides the flower aside; the ambient overlay HUD itself is still pending*
   - **Exit:** playable overlay loop on Mac; same build runs on Windows
 
 - [ ] **M2 — Helpers**

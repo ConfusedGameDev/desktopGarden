@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
@@ -36,6 +37,13 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
                 return;
             }
 
+            // uGUI gets first claim: a click on the expanded menu must not also harvest whatever
+            // petal happens to sit behind the panel.
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+
             Camera cam = raycastCamera != null ? raycastCamera : Camera.main;
             if (cam == null)
             {
@@ -43,10 +51,18 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
             }
 
             Ray ray = cam.ScreenPointToRay(pointer.position.ReadValue());
-            if (Physics.Raycast(ray, out RaycastHit hit, maxRayDistance)
-                && hit.collider.TryGetComponent(out PetalController petal))
+            if (!Physics.Raycast(ray, out RaycastHit hit, maxRayDistance))
+            {
+                return;
+            }
+
+            if (hit.collider.TryGetComponent(out PetalController petal))
             {
                 petal.ApplyDamage(damagePerClick);
+            }
+            else if (hit.collider.TryGetComponent(out FlowerCenterButton centerButton))
+            {
+                centerButton.Click();
             }
         }
     }

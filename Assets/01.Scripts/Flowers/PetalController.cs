@@ -45,6 +45,9 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
         private MeshRenderer cachedMeshRenderer;
         private TextMeshPro label;
 
+        /// <summary>Raised on every hit that lands (including the killing one). Economy listens.</summary>
+        public event Action<PetalController> Damaged;
+
         /// <summary>Raised once, when hit points reach zero. The parent flower destroys the petal.</summary>
         public event Action<PetalController> Destroyed;
 
@@ -104,11 +107,23 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
 
             remainingHitPoints = Mathf.Max(remainingHitPoints - damage, 0);
             UpdateLabel();
+            Damaged?.Invoke(this);
 
             if (remainingHitPoints == 0)
             {
                 Destroyed?.Invoke(this);
             }
+        }
+
+        /// <summary>
+        /// Load path: overwrite remaining hit points with no gameplay side effects — no
+        /// <see cref="Damaged"/> (the economy must not earn pollen from a reload) and no
+        /// <see cref="Destroyed"/> (a saved petal is by definition alive, hence the min of 1).
+        /// </summary>
+        public void RestoreHitPoints(int value)
+        {
+            remainingHitPoints = Mathf.Clamp(value, 1, maxHitPoints);
+            UpdateLabel();
         }
 
         /// <summary>

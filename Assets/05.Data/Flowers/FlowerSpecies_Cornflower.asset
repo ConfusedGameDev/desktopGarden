@@ -30,3 +30,4 @@ MonoBehaviour:
   centerColor: {r: 0.22, g: 0.16, b: 0.45, a: 1}
   petalHitPoints: 480
   petalLabelColor: {r: 1, g: 0.98, b: 0.92, a: 1}
+  pollenPerClick: 28

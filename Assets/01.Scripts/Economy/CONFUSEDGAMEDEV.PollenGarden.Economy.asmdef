@@ -1,11 +1,9 @@
 {
-    "name": "CONFUSEDGAMEDEV.PollenGarden.Flowers",
-    "rootNamespace": "CONFUSEDGAMEDEV.PollenGarden.Flowers",
+    "name": "CONFUSEDGAMEDEV.PollenGarden.Economy",
+    "rootNamespace": "CONFUSEDGAMEDEV.PollenGarden.Economy",
     "references": [
-        "CONFUSEDGAMEDEV.PollenGarden.Platform",
-        "Unity.InputSystem",
-        "Unity.TextMeshPro",
-        "UnityEngine.UI"
+        "CONFUSEDGAMEDEV.PollenGarden.Core",
+        "CONFUSEDGAMEDEV.PollenGarden.Flowers"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

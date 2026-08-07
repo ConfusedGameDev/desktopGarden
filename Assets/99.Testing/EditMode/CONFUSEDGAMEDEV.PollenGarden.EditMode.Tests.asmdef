@@ -3,6 +3,10 @@
     "rootNamespace": "CONFUSEDGAMEDEV.PollenGarden.Tests",
     "references": [
         "CONFUSEDGAMEDEV.PollenGarden.Flowers",
+        "CONFUSEDGAMEDEV.PollenGarden.Core",
+        "CONFUSEDGAMEDEV.PollenGarden.Economy",
+        "CONFUSEDGAMEDEV.PollenGarden.Helpers",
+        "CONFUSEDGAMEDEV.PollenGarden.Save",
         "Unity.TextMeshPro",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"

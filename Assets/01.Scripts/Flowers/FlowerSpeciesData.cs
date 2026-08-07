@@ -65,6 +65,10 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
         [SerializeField]
         private Color petalLabelColor = new Color(0.16f, 0.13f, 0.1f, 1f);
 
+        [Tooltip("Pollen earned per click on this species' petals.")]
+        [SerializeField, Min(0)]
+        private int pollenPerClick = 5;
+
         public string DisplayName => displayName;
         public int UnlockOrder => unlockOrder;
 
@@ -83,10 +87,12 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
 
         public int PetalHitPoints => Mathf.Max(petalHitPoints, 1);
         public Color PetalLabelColor => petalLabelColor;
+        public int PollenPerClick => Mathf.Max(pollenPerClick, 0);
 
         private void OnValidate()
         {
             petalHitPoints = Mathf.Max(petalHitPoints, 1);
+            pollenPerClick = Mathf.Max(pollenPerClick, 0);
             petalCount = Mathf.Clamp(petalCount, MinPetalCount, MaxPetalCount);
             petalBaseRadius = Mathf.Max(petalBaseRadius, 0f);
             centerRadius = Mathf.Max(centerRadius, PetalShapeParameters.MinSize);

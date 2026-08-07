@@ -63,6 +63,14 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
         /// </summary>
         public event Action<FlowerController> FlowerCompleted;
 
+        /// <summary>Every landed hit on any of this flower's petals. The economy listens.</summary>
+        public event Action<PetalController> PetalDamaged;
+
+        /// <summary>The centre disc acting as the "flower button" — opens the expanded menu.</summary>
+        public event Action CenterClicked;
+
+        private MeshRenderer centerRenderer;
+
         /// <summary>Assigning does not rebuild; call <see cref="Rebuild"/> afterwards.</summary>
         public FlowerSpeciesData Species
         {
@@ -283,6 +291,21 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
             MeshRenderer renderer = centerObject.AddComponent<MeshRenderer>();
             renderer.sharedMaterial = centerMaterial;
             ConfigureRenderer(renderer);
+            centerRenderer = renderer;
+
+            // The disc doubles as the "flower button": collider for the click raycast, marker
+            // component to route the hit back here. Flat mesh, so the box needs a little depth.
+            Bounds centerBounds = centerMesh.bounds;
+            BoxCollider centerCollider = centerObject.AddComponent<BoxCollider>();
+            centerCollider.center = centerBounds.center;
+            centerCollider.size = new Vector3(centerBounds.size.x, centerBounds.size.y, 0.05f);
+
+            centerObject.AddComponent<FlowerCenterButton>().Initialize(this);
+        }
+
+        internal void NotifyCenterClicked()
+        {
+            CenterClicked?.Invoke();
         }
 
         private void BuildPetals()
@@ -309,13 +332,35 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
 
                 PetalController petal = petalObject.AddComponent<PetalController>();
                 petal.Initialize(i, angleDegrees, petalMesh, petalMaterial, species);
+                petal.Damaged += HandlePetalDamaged;
                 petal.Destroyed += HandlePetalDestroyed;
                 petals.Add(petal);
             }
         }
 
+        private void HandlePetalDamaged(PetalController petal)
+        {
+            PetalDamaged?.Invoke(petal);
+        }
+
         private void HandlePetalDestroyed(PetalController petal)
         {
+            RemovePetal(petal);
+        }
+
+        /// <summary>
+        /// Takes a petal out of the flower — the shared teardown for both gameplay death and the
+        /// save system restoring an already-destroyed petal. Fires <see cref="FlowerCompleted"/>
+        /// if it was the last one.
+        /// </summary>
+        public void RemovePetal(PetalController petal)
+        {
+            if (petal == null || !petals.Contains(petal))
+            {
+                return;
+            }
+
+            petal.Damaged -= HandlePetalDamaged;
             petal.Destroyed -= HandlePetalDestroyed;
             petals.Remove(petal);
             DestroySafe(petal.gameObject);
@@ -333,7 +378,7 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
         /// </summary>
         private void Update()
         {
-            if (!Application.isPlaying || petals.Count == 0)
+            if (!Application.isPlaying)
             {
                 return;
             }
@@ -350,6 +395,13 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
                 {
                     InteractiveScreenRects.Publish(screenRect);
                 }
+            }
+
+            // The centre is clickable too (it opens the menu), so it must claim its rect.
+            if (centerRenderer != null
+                && TryGetScreenRect(cam, centerRenderer.bounds, out Rect centerRect))
+            {
+                InteractiveScreenRects.Publish(centerRect);
             }
         }
 
