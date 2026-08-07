@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 361296b8ac4214fc99cdf0f43a9aa1ec, type: 3}
+  m_Name: FlowerSpecies_Daisy
+  m_EditorClassIdentifier: CONFUSEDGAMEDEV.PollenGarden.Flowers::CONFUSEDGAMEDEV.PollenGarden.Flowers.FlowerSpeciesData
+  displayName: Daisy
+  unlockOrder: 0
+  petalCount: 12
+  petalBaseRadius: 0.34
+  petalAngleOffset: 0
+  petalShape:
+    length: 1.2
+    halfWidth: 0.3
+    lengthSegments: 12
+    baseRoundness: 0.8
+    tipSharpness: 0.6
+  centerRadius: 0.42
+  centerSegments: 16
+  centerDepthOffset: 0.002
+  petalColor: {r: 0.98, g: 0.98, b: 0.94, a: 1}
+  centerColor: {r: 1, g: 0.82, b: 0.18, a: 1}
+  petalHitPoints: 10
+  petalLabelColor: {r: 0.16, g: 0.13, b: 0.1, a: 1}

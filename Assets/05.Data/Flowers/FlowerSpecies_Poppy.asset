@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 361296b8ac4214fc99cdf0f43a9aa1ec, type: 3}
+  m_Name: FlowerSpecies_Poppy
+  m_EditorClassIdentifier: CONFUSEDGAMEDEV.PollenGarden.Flowers::CONFUSEDGAMEDEV.PollenGarden.Flowers.FlowerSpeciesData
+  displayName: Poppy
+  unlockOrder: 1
+  petalCount: 8
+  petalBaseRadius: 0.3
+  petalAngleOffset: 0
+  petalShape:
+    length: 1.1
+    halfWidth: 0.42
+    lengthSegments: 12
+    baseRoundness: 0.45
+    tipSharpness: 0.45
+  centerRadius: 0.4
+  centerSegments: 16
+  centerDepthOffset: 0.002
+  petalColor: {r: 0.86, g: 0.16, b: 0.12, a: 1}
+  centerColor: {r: 0.16, g: 0.1, b: 0.14, a: 1}
+  petalHitPoints: 220
+  petalLabelColor: {r: 1, g: 0.96, b: 0.9, a: 1}
