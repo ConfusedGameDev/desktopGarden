@@ -100,6 +100,16 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
         /// </summary>
         public void ApplyDamage(int damage)
         {
+            ApplyDamage(damage, raiseDamagedEvent: true);
+        }
+
+        /// <summary>
+        /// <paramref name="raiseDamagedEvent"/> is false for damage that must not pay pollen —
+        /// the <see cref="Damaged"/> event is the harvest path, and a hummingbird's visit pays
+        /// nectar instead. <see cref="Destroyed"/> always fires; death is not a currency.
+        /// </summary>
+        public void ApplyDamage(int damage, bool raiseDamagedEvent)
+        {
             if (!IsAlive || damage <= 0)
             {
                 return;
@@ -107,7 +117,11 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
 
             remainingHitPoints = Mathf.Max(remainingHitPoints - damage, 0);
             UpdateLabel();
-            Damaged?.Invoke(this);
+
+            if (raiseDamagedEvent)
+            {
+                Damaged?.Invoke(this);
+            }
 
             if (remainingHitPoints == 0)
             {

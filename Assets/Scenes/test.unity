@@ -263,6 +263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: CONFUSEDGAMEDEV.PollenGarden.Helpers::CONFUSEDGAMEDEV.PollenGarden.Helpers.HelperManager
   economy: {fileID: 548814979}
+  tendedFlower: {fileID: 766834386}
   availableHelpers:
   - {fileID: 11400000, guid: 725a8d2dfaa8a4985af9e567dbac6aec, type: 2}
   - {fileID: 11400000, guid: a05801bfb8823422aac1e3b7b4c737e7, type: 2}

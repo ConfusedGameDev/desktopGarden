@@ -3,7 +3,8 @@
     "rootNamespace": "CONFUSEDGAMEDEV.PollenGarden.Helpers",
     "references": [
         "CONFUSEDGAMEDEV.PollenGarden.Core",
-        "CONFUSEDGAMEDEV.PollenGarden.Economy"
+        "CONFUSEDGAMEDEV.PollenGarden.Economy",
+        "CONFUSEDGAMEDEV.PollenGarden.Flowers"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

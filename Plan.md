@@ -197,8 +197,8 @@ Per frame in overlay mode: UI layer sends union of interactive screen rects (pet
   - **Exit:** playable overlay loop on Mac; same build runs on Windows
 
 - [ ] **M2 — Helpers**
-  - [ ] HelperAgent FSM (fly-in / collect / fly-out), pooling
-  - [ ] Bee, Butterfly, Hummingbird + shop
+  - [x] HelperAgent FSM (fly-in / collect / fly-out), pooling — *pooled unlit discs; flight is presentation only, the harvest lands in `HelperManager.ExecuteVisit`. Visit rates come from `HelperVisitAccumulator` in `.Core` (double-precision, ready to replay offline time in M3)*
+  - [x] Bee, Butterfly, Hummingbird + shop — *bee/butterfly damage through the petal `Damaged` event (earning pollen exactly like a click); hummingbird damages silently and banks nectar. Ownership persists via the save system*
   - [ ] Speedup & Golden Pollen buffs, Instant Petal Cut
   - **Exit:** idle progression works while focused; autosave solid
 

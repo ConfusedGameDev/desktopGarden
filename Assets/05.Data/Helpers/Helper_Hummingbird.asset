@@ -16,3 +16,9 @@ MonoBehaviour:
   nectarCost: 50
   visitIntervalSeconds: 22
   petalDamagePerVisit: 4
+  yieldType: 1
+  nectarPerVisit: 1
+  agentColor: {r: 0.16, g: 0.75, b: 0.66, a: 1}
+  agentDiameter: 0.26
+  flyDurationSeconds: 1.1
+  collectDurationSeconds: 0.7
