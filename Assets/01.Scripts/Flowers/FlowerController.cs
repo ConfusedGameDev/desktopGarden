@@ -50,6 +50,10 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
         [SerializeField]
         private Material baseMaterial;
 
+        [Tooltip("Display-only flower (gallery): no HP labels, no colliders, no interactive rects.")]
+        [SerializeField]
+        private bool decorative;
+
         private Mesh petalMesh;
         private Mesh centerMesh;
         private Material petalMaterial;
@@ -82,6 +86,13 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
         {
             get => baseMaterial;
             set => baseMaterial = value;
+        }
+
+        /// <summary>Assigning does not rebuild; call <see cref="Rebuild"/> afterwards.</summary>
+        public bool Decorative
+        {
+            get => decorative;
+            set => decorative = value;
         }
 
         public int PetalCount => petals.Count;
@@ -293,6 +304,11 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
             ConfigureRenderer(renderer);
             centerRenderer = renderer;
 
+            if (decorative)
+            {
+                return;
+            }
+
             // The disc doubles as the "flower button": collider for the click raycast, marker
             // component to route the hit back here. Flat mesh, so the box needs a little depth.
             Bounds centerBounds = centerMesh.bounds;
@@ -331,7 +347,7 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
                 ConfigureRenderer(renderer);
 
                 PetalController petal = petalObject.AddComponent<PetalController>();
-                petal.Initialize(i, angleDegrees, petalMesh, petalMaterial, species);
+                petal.Initialize(i, angleDegrees, petalMesh, petalMaterial, species, decorative);
                 petal.Damaged += HandlePetalDamaged;
                 petal.Destroyed += HandlePetalDestroyed;
                 petals.Add(petal);
@@ -378,7 +394,7 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
         /// </summary>
         private void Update()
         {
-            if (!Application.isPlaying)
+            if (!Application.isPlaying || decorative)
             {
                 return;
             }

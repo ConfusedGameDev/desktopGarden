@@ -12,6 +12,9 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
     {
         private FlowerController flower;
 
+        /// <summary>The flower this button belongs to; the drag path anchors through it.</summary>
+        public FlowerController Flower => flower;
+
         public void Initialize(FlowerController owner)
         {
             flower = owner;

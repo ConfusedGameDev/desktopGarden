@@ -199,6 +199,7 @@ Per frame in overlay mode: UI layer sends union of interactive screen rects (pet
 - [ ] **M2 — Helpers**
   - [x] HelperAgent FSM (fly-in / collect / fly-out), pooling — *pooled unlit discs; flight is presentation only, the harvest lands in `HelperManager.ExecuteVisit`. Visit rates come from `HelperVisitAccumulator` in `.Core` (double-precision, ready to replay offline time in M3)*
   - [x] Bee, Butterfly, Hummingbird + shop — *bee/butterfly damage through the petal `Damaged` event (earning pollen exactly like a click); hummingbird damages silently and banks nectar. Ownership persists via the save system*
+  - [x] Flower gallery — *botanical-park placard view in the expanded menu: completed species (tracked by `FlowerProgression`, saved) exhibited as a decorative flower beside scientific name, native range and description from `FlowerSpeciesData`; helpers pause while browsing. Expanded view now sits on a full-window (sprite-less) UI Image backdrop awaiting art*
   - [ ] Speedup & Golden Pollen buffs, Instant Petal Cut
   - **Exit:** idle progression works while focused; autosave solid
 

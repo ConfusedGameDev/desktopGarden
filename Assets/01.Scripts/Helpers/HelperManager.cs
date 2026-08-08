@@ -28,14 +28,25 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Helpers
         [SerializeField]
         private List<HelperData> availableHelpers = new List<HelperData>();
 
+        [Tooltip("Which screen edges agents enter and leave through. Adjustable in Settings.")]
+        [SerializeField]
+        private HelperEntryMode entryMode = HelperEntryMode.ClosestTwoEdges;
+
+        [Tooltip("In closest-edges mode, how far along the edge (in viewport units) an agent may " +
+                 "scatter from the flower's own position. Small = short, direct approach paths.")]
+        [SerializeField, Range(0.01f, 0.5f)]
+        private float entrySpreadViewport = 0.12f;
+
         private readonly Dictionary<HelperData, int> ownedCounts = new Dictionary<HelperData, int>();
         private readonly Dictionary<HelperData, HelperVisitAccumulator> visitClocks =
             new Dictionary<HelperData, HelperVisitAccumulator>();
         private readonly Dictionary<HelperData, Material> agentMaterials =
             new Dictionary<HelperData, Material>();
         private readonly Stack<HelperAgent> agentPool = new Stack<HelperAgent>();
+        private readonly List<HelperAgent> activeAgents = new List<HelperAgent>();
 
         private Mesh agentMesh;
+        private bool visitsPaused;
 
         /// <summary>Raised when a purchase changes the ownership ledger.</summary>
         public event Action Changed;
@@ -50,6 +61,12 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Helpers
         {
             get => tendedFlower;
             set => tendedFlower = value;
+        }
+
+        public HelperEntryMode EntryMode
+        {
+            get => entryMode;
+            set => entryMode = value;
         }
 
         public List<HelperData> AvailableHelpers => availableHelpers;
@@ -99,11 +116,30 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Helpers
             return true;
         }
 
+        /// <summary>
+        /// Freezes the whole visit engine (the gallery does this): clocks stop accruing and any
+        /// agent already in flight is despawned rather than left hovering over a hidden flower.
+        /// In-flight visits are simply lost — a visit that never landed pays nothing.
+        /// </summary>
+        public void SetPaused(bool paused)
+        {
+            visitsPaused = paused;
+            if (!paused)
+            {
+                return;
+            }
+
+            for (int i = activeAgents.Count - 1; i >= 0; i--)
+            {
+                ReturnToPool(activeAgents[i]);
+            }
+        }
+
         private void Update()
         {
             // No living petals → hold the clocks entirely; helpers should not bank visits
             // against a flower that is mid-replacement.
-            if (tendedFlower == null || tendedFlower.PetalCount == 0)
+            if (visitsPaused || tendedFlower == null || tendedFlower.PetalCount == 0)
             {
                 return;
             }
@@ -194,6 +230,7 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Helpers
 
             HelperAgent agent = agentPool.Count > 0 ? agentPool.Pop() : CreateAgent();
             agent.GetComponent<MeshRenderer>().sharedMaterial = MaterialFor(helper);
+            activeAgents.Add(agent);
             agent.Launch(helper, target,
                 OffscreenPoint(cam), OffscreenPoint(cam),
                 ExecuteVisit, ReturnToPool);
@@ -239,6 +276,7 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Helpers
 
         private void ReturnToPool(HelperAgent agent)
         {
+            activeAgents.Remove(agent);
             agent.gameObject.SetActive(false);
             agentPool.Push(agent);
         }
@@ -253,20 +291,50 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Helpers
             return tendedFlower.Petals[UnityEngine.Random.Range(0, tendedFlower.PetalCount)];
         }
 
-        /// <summary>A point just outside a random screen edge, on the flower's depth plane.</summary>
+        /// <summary>
+        /// A point just outside a screen edge, on the flower's depth plane. Which edges are
+        /// eligible depends on <see cref="EntryMode"/>: by default only the two nearest the
+        /// flower, entering level with the flower's own position (± a small scatter) so agents
+        /// pop in right beside it instead of flying across the whole desktop.
+        /// </summary>
         private Vector3 OffscreenPoint(Camera cam)
         {
             const float Margin = 0.08f;
-            float along = UnityEngine.Random.value;
-            Vector2 viewport = UnityEngine.Random.Range(0, 4) switch
+
+            Vector3 flowerPosition = tendedFlower != null ? tendedFlower.transform.position : Vector3.zero;
+
+            ScreenEdge edge;
+            float along;
+            if (entryMode == HelperEntryMode.AllEdges)
             {
-                0 => new Vector2(-Margin, along),
-                1 => new Vector2(1f + Margin, along),
-                2 => new Vector2(along, -Margin),
+                edge = (ScreenEdge)UnityEngine.Random.Range(0, 4);
+                along = UnityEngine.Random.value;
+            }
+            else
+            {
+                Vector3 flowerViewport = cam.WorldToViewportPoint(flowerPosition);
+                (ScreenEdge horizontal, ScreenEdge vertical) =
+                    ScreenEdges.ClosestTwo(flowerViewport.x, flowerViewport.y);
+                edge = UnityEngine.Random.value < 0.5f ? horizontal : vertical;
+
+                // Level with the flower: entering through a side edge matches its y, through
+                // top/bottom matches its x, scattered a little so paths do not stack.
+                float anchor = edge == ScreenEdge.Left || edge == ScreenEdge.Right
+                    ? flowerViewport.y
+                    : flowerViewport.x;
+                along = Mathf.Clamp(
+                    anchor + UnityEngine.Random.Range(-entrySpreadViewport, entrySpreadViewport),
+                    0.02f, 0.98f);
+            }
+
+            Vector2 viewport = edge switch
+            {
+                ScreenEdge.Left => new Vector2(-Margin, along),
+                ScreenEdge.Right => new Vector2(1f + Margin, along),
+                ScreenEdge.Bottom => new Vector2(along, -Margin),
                 _ => new Vector2(along, 1f + Margin),
             };
 
-            Vector3 flowerPosition = tendedFlower != null ? tendedFlower.transform.position : Vector3.zero;
             float depth = Vector3.Dot(flowerPosition - cam.transform.position, cam.transform.forward);
             return cam.ViewportToWorldPoint(new Vector3(viewport.x, viewport.y, depth));
         }

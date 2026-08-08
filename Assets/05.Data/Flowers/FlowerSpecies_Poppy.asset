@@ -31,3 +31,6 @@ MonoBehaviour:
   petalHitPoints: 220
   petalLabelColor: {r: 1, g: 0.96, b: 0.9, a: 1}
   pollenPerClick: 12
+  scientificName: Papaver rhoeas
+  nativeRange: Native to Europe, North Africa and temperate Asia, thriving in field margins and freshly turned ground.
+  placardDescription: The corn poppy's papery petals last only a day or two. Its seeds can sleep in the soil for decades, waiting for the ground to be disturbed before blooming in crimson drifts.

@@ -31,3 +31,6 @@ MonoBehaviour:
   petalHitPoints: 10
   petalLabelColor: {r: 0.16, g: 0.13, b: 0.1, a: 1}
   pollenPerClick: 5
+  scientificName: Bellis perennis
+  nativeRange: Native to Europe and North Africa, now naturalized in temperate lawns and meadows worldwide.
+  placardDescription: The common daisy opens with the sun and closes at dusk - its name comes from "day's eye". Each bloom is really dozens of tiny flowers packed into one golden disc.

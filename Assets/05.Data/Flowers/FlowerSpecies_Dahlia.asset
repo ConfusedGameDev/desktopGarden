@@ -31,3 +31,6 @@ MonoBehaviour:
   petalHitPoints: 1000
   petalLabelColor: {r: 1, g: 0.98, b: 0.94, a: 1}
   pollenPerClick: 65
+  scientificName: Dahlia pinnata
+  nativeRange: Native to the highlands of Mexico and Central America; the national flower of Mexico.
+  placardDescription: Dahlias were cultivated by the Aztecs long before reaching Europe. A single garden bed can hold blooms from button-sized pompons to plates a foot across.

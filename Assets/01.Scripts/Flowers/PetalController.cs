@@ -75,8 +75,13 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
         public MeshRenderer MeshRenderer =>
             cachedMeshRenderer != null ? cachedMeshRenderer : cachedMeshRenderer = GetComponent<MeshRenderer>();
 
+        /// <param name="decorative">
+        /// True for display-only petals (the gallery flower): geometry and tint but no collider,
+        /// no clicks-remaining label — a museum specimen, not a harvest target.
+        /// </param>
         public void Initialize(int petalIndex, float radialAngleDegrees,
-                               Mesh sharedMesh, Material sharedMaterial, FlowerSpeciesData species)
+                               Mesh sharedMesh, Material sharedMaterial, FlowerSpeciesData species,
+                               bool decorative = false)
         {
             this.petalIndex = petalIndex;
             this.radialAngleDegrees = radialAngleDegrees;
@@ -88,6 +93,11 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
 
             maxHitPoints = species.PetalHitPoints;
             remainingHitPoints = maxHitPoints;
+
+            if (decorative)
+            {
+                return;
+            }
 
             EnsureCollider(sharedMesh);
             EnsureLabel(species);

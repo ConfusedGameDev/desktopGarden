@@ -31,3 +31,6 @@ MonoBehaviour:
   petalHitPoints: 480
   petalLabelColor: {r: 1, g: 0.98, b: 0.92, a: 1}
   pollenPerClick: 28
+  scientificName: Centaurea cyanus
+  nativeRange: Once a common sight in European grain fields; today it grows in gardens and wildflower meadows across the world.
+  placardDescription: Named for growing among cereal crops, the cornflower's intense blue was once the pride of country bouquets. It is the national flower of Estonia.

@@ -1,5 +1,6 @@
 using System.IO;
 using CONFUSEDGAMEDEV.PollenGarden.Core;
+using CONFUSEDGAMEDEV.PollenGarden.Helpers;
 using CONFUSEDGAMEDEV.PollenGarden.Economy;
 using CONFUSEDGAMEDEV.PollenGarden.Flowers;
 using CONFUSEDGAMEDEV.PollenGarden.Helpers;
@@ -120,6 +121,32 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Tests
                 Assert.AreNotEqual(doomed.PetalIndex, petal.PetalIndex,
                     "Destroyed petal came back from the dead.");
             }
+        }
+
+        [Test]
+        public void CaptureApply_RoundTripsTheFlowerAnchorPosition()
+        {
+            var anchor = root.AddComponent<ViewportAnchor>();
+            anchor.ViewportPosition = new Vector2(0.42f, 0.17f);
+
+            SaveModel model = save.CaptureModel();
+            anchor.ViewportPosition = new Vector2(0.85f, 0.2f);
+            save.ApplyModel(model);
+
+            Assert.AreEqual(0.42f, anchor.ViewportPosition.x, 1e-5f);
+            Assert.AreEqual(0.17f, anchor.ViewportPosition.y, 1e-5f);
+        }
+
+        [Test]
+        public void CaptureApply_RoundTripsTheHelperEntryMode()
+        {
+            helpers.EntryMode = HelperEntryMode.AllEdges;
+
+            SaveModel model = save.CaptureModel();
+            helpers.EntryMode = HelperEntryMode.ClosestTwoEdges;
+            save.ApplyModel(model);
+
+            Assert.AreEqual(HelperEntryMode.AllEdges, helpers.EntryMode);
         }
 
         [Test]

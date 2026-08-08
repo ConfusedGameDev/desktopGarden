@@ -34,6 +34,20 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Core
         public List<PetalSave> petals = new List<PetalSave>();
 
         public List<HelperSave> helpers = new List<HelperSave>();
+
+        /// <summary>Asset names of species completed at least once, in first-completion order.</summary>
+        public List<string> completedSpecies = new List<string>();
+
+        /// <summary>
+        /// Overlay-mode viewport anchor of the tended flower (the player can drag it anywhere).
+        /// -1 means "not recorded" — saves from before this field keep their default position.
+        /// </summary>
+        public float overlayAnchorX = -1f;
+
+        public float overlayAnchorY = -1f;
+
+        /// <summary>Cast of <see cref="HelperEntryMode"/>; -1 means "not recorded".</summary>
+        public int helperEntryMode = -1;
     }
 
     [Serializable]

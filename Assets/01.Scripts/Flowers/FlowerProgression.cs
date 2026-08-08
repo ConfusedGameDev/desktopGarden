@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,6 +25,11 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
         [SerializeField]
         private bool loopAfterLast = true;
 
+        private readonly List<FlowerSpeciesData> completedSpecies = new List<FlowerSpeciesData>();
+
+        /// <summary>Raised when a species is first completed (or the collection is restored).</summary>
+        public event Action CollectionChanged;
+
         public FlowerController Flower
         {
             get => flower;
@@ -31,6 +37,9 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
         }
 
         public List<FlowerSpeciesData> SpeciesInOrder => speciesInOrder;
+
+        /// <summary>Species completed at least once, in first-completion order. The gallery's data.</summary>
+        public IReadOnlyList<FlowerSpeciesData> CompletedSpecies => completedSpecies;
 
         private void OnEnable()
         {
@@ -50,7 +59,37 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
 
         private void HandleFlowerCompleted(FlowerController completedFlower)
         {
+            RecordCompletion(completedFlower.Species);
             Advance();
+        }
+
+        /// <summary>Adds a species to the collection (once); repeat completions are not re-listed.</summary>
+        public void RecordCompletion(FlowerSpeciesData species)
+        {
+            if (species == null || completedSpecies.Contains(species))
+            {
+                return;
+            }
+
+            completedSpecies.Add(species);
+            CollectionChanged?.Invoke();
+        }
+
+        /// <summary>Load path: rebuild the collection from saved asset names, in saved order.</summary>
+        public void RestoreCompletedSpecies(IEnumerable<string> speciesNames)
+        {
+            completedSpecies.Clear();
+            foreach (string speciesName in speciesNames)
+            {
+                FlowerSpeciesData species = speciesInOrder.Find(
+                    s => s != null && s.name == speciesName);
+                if (species != null && !completedSpecies.Contains(species))
+                {
+                    completedSpecies.Add(species);
+                }
+            }
+
+            CollectionChanged?.Invoke();
         }
 
         /// <summary>

@@ -69,6 +69,17 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
         [SerializeField, Min(0)]
         private int pollenPerClick = 5;
 
+        [Header("Botanical placard (gallery)")]
+        [SerializeField]
+        private string scientificName = "Bellis perennis";
+
+        [Tooltip("Where the plant grows in the real world.")]
+        [SerializeField]
+        private string nativeRange = "";
+
+        [SerializeField, TextArea(3, 6)]
+        private string placardDescription = "";
+
         public string DisplayName => displayName;
         public int UnlockOrder => unlockOrder;
 
@@ -88,6 +99,10 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Flowers
         public int PetalHitPoints => Mathf.Max(petalHitPoints, 1);
         public Color PetalLabelColor => petalLabelColor;
         public int PollenPerClick => Mathf.Max(pollenPerClick, 0);
+
+        public string ScientificName => scientificName;
+        public string NativeRange => nativeRange;
+        public string PlacardDescription => placardDescription;
 
         private void OnValidate()
         {

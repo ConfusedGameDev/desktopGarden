@@ -247,9 +247,12 @@ MonoBehaviour:
   economyManager: {fileID: 548814979}
   helperManager: {fileID: 548814978}
   tendedFlower: {fileID: 766834386}
+  galleryFlower: {fileID: 826641259}
+  progression: {fileID: 766834388}
   panelColor: {r: 0.1, g: 0.16, b: 0.1, a: 0.96}
   buttonColor: {r: 0.22, g: 0.34, b: 0.2, a: 1}
   textColor: {r: 0.96, g: 0.97, b: 0.92, a: 1}
+  backdropColor: {r: 0.88, g: 0.91, b: 0.84, a: 1}
 --- !u!114 &548814978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,6 +335,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: CONFUSEDGAMEDEV.PollenGarden.Flowers::CONFUSEDGAMEDEV.PollenGarden.Flowers.FlowerController
   species: {fileID: 11400000, guid: 92356898eb7b8428dabd2341d5f18071, type: 2}
   baseMaterial: {fileID: 2100000, guid: c4dfb19aa68d5497ab12871e2fba8d07, type: 2}
+  decorative: 0
 --- !u!4 &766834387
 Transform:
   m_ObjectHideFlags: 0
@@ -519,6 +523,70 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1 &826641257
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 826641260}
+  - component: {fileID: 826641259}
+  - component: {fileID: 826641258}
+  m_Layer: 0
+  m_Name: GalleryFlower
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &826641258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 826641257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c8dee480365a40c8a07a09fc38b37c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CONFUSEDGAMEDEV.PollenGarden.Flowers::CONFUSEDGAMEDEV.PollenGarden.Flowers.ViewportAnchor
+  viewportPosition: {x: 0.27, y: 0.5}
+  expandedViewportPosition: {x: 0.27, y: 0.5}
+  windowMode: {fileID: 301316172}
+  anchorCamera: {fileID: 0}
+--- !u!114 &826641259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 826641257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e960cdd6f2c8438387ed5e338e23b92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CONFUSEDGAMEDEV.PollenGarden.Flowers::CONFUSEDGAMEDEV.PollenGarden.Flowers.FlowerController
+  species: {fileID: 0}
+  baseMaterial: {fileID: 0}
+  decorative: 1
+--- !u!4 &826641260
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 826641257}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1708410669
 GameObject:
   m_ObjectHideFlags: 0
@@ -735,3 +803,4 @@ SceneRoots:
   - {fileID: 301316173}
   - {fileID: 548814976}
   - {fileID: 1818651760}
+  - {fileID: 826641260}

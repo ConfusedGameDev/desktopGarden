@@ -121,6 +121,13 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Save
                         hitPoints = petal.RemainingHitPoints,
                     });
                 }
+
+                var anchor = tendedFlower.GetComponent<ViewportAnchor>();
+                if (anchor != null)
+                {
+                    model.overlayAnchorX = anchor.ViewportPosition.x;
+                    model.overlayAnchorY = anchor.ViewportPosition.y;
+                }
             }
 
             if (helpers != null)
@@ -128,6 +135,16 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Save
                 foreach (KeyValuePair<HelperData, int> owned in helpers.OwnedCounts)
                 {
                     model.helpers.Add(new HelperSave { helperName = owned.Key.name, count = owned.Value });
+                }
+
+                model.helperEntryMode = (int)helpers.EntryMode;
+            }
+
+            if (progression != null)
+            {
+                foreach (FlowerSpeciesData species in progression.CompletedSpecies)
+                {
+                    model.completedSpecies.Add(species.name);
                 }
             }
 
@@ -157,6 +174,26 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Save
                     {
                         helpers.RestoreOwnedCount(data, saved.count);
                     }
+                }
+
+                if (model.helperEntryMode == (int)HelperEntryMode.ClosestTwoEdges
+                    || model.helperEntryMode == (int)HelperEntryMode.AllEdges)
+                {
+                    helpers.EntryMode = (HelperEntryMode)model.helperEntryMode;
+                }
+            }
+
+            if (progression != null)
+            {
+                progression.RestoreCompletedSpecies(model.completedSpecies);
+            }
+
+            if (tendedFlower != null && model.overlayAnchorX >= 0f && model.overlayAnchorY >= 0f)
+            {
+                var anchor = tendedFlower.GetComponent<ViewportAnchor>();
+                if (anchor != null)
+                {
+                    anchor.ViewportPosition = new Vector2(model.overlayAnchorX, model.overlayAnchorY);
                 }
             }
 
