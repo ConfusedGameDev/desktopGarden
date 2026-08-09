@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: CONFUSEDGAMEDEV.PollenGarden.Flowers::CONFUSEDGAMEDEV.PollenGarden.Flowers.FlowerSpeciesData
   displayName: Daisy
   unlockOrder: 0
-  petalCount: 12
-  petalBaseRadius: 0.34
+  petalCount: 13
+  petalBaseRadius: 0.28
   petalAngleOffset: 0
   petalShape:
     length: 1.2
     halfWidth: 0.3
     lengthSegments: 12
-    baseRoundness: 0.8
-    tipSharpness: 0.6
+    baseRoundness: 0.15
+    tipSharpness: 0.4
   centerRadius: 0.42
-  centerSegments: 16
+  centerSegments: 18
   centerDepthOffset: 0.002
   petalColor: {r: 0.98, g: 0.98, b: 0.94, a: 1}
   centerColor: {r: 1, g: 0.82, b: 0.18, a: 1}
