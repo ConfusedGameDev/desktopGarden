@@ -16,14 +16,24 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Editor
         [MenuItem("Pollen Garden/Build/macOS Player")]
         public static void BuildMac()
         {
-            const string location = "Builds/macOS/PollenGarden.app";
+            Build(BuildTarget.StandaloneOSX, "Builds/macOS/PollenGarden.app");
+        }
+
+        [MenuItem("Pollen Garden/Build/Windows Player")]
+        public static void BuildWindows()
+        {
+            Build(BuildTarget.StandaloneWindows64, "Builds/Windows/PollenGarden.exe");
+        }
+
+        private static void Build(BuildTarget target, string location)
+        {
             Directory.CreateDirectory(Path.GetDirectoryName(location));
 
             BuildPlayerOptions options = new BuildPlayerOptions
             {
                 scenes = Scenes,
                 locationPathName = location,
-                target = BuildTarget.StandaloneOSX,
+                target = target,
                 options = BuildOptions.None,
             };
 

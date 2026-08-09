@@ -30,6 +30,13 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Platform
         [SerializeField, Min(1)]
         private int overlayTargetFrameRate = 30;
 
+        [Tooltip("Seconds after entering overlay during which the window rect is re-asserted each " +
+                 "frame, to win the race against the OS/engine finishing their own window setup.")]
+        [SerializeField, Min(0f)]
+        private float overlaySettleSeconds = 2f;
+
+        private float settleUntilTime;
+
         private IWindowPlatform platform;
         private CameraClearFlags previousClearFlags;
         private Color previousBackgroundColor;
@@ -93,8 +100,28 @@ namespace CONFUSEDGAMEDEV.PollenGarden.Platform
             Platform.SetClickThrough(true);
 
             IsOverlayActive = true;
+            settleUntilTime = Time.unscaledTime + overlaySettleSeconds;
 
             Debug.Log($"[WindowModeManager] Overlay entered (platform support: {Platform.SupportsOverlay}).");
+        }
+
+        /// <summary>
+        /// Re-asserts the overlay rect for a short window after entering it. Unity restores its
+        /// own window geometry asynchronously during startup, so a single SetWindowRect issued
+        /// from Start is sometimes applied and sometimes overwritten a few frames later — which
+        /// showed up as the flower landing in a different place on each launch.
+        /// </summary>
+        private void Update()
+        {
+            if (!IsOverlayActive || Time.unscaledTime > settleUntilTime)
+            {
+                return;
+            }
+
+            if (Platform.TryGetScreenFrame(out Rect screenFrame))
+            {
+                Platform.SetWindowRect(screenFrame);
+            }
         }
 
         public void ExitOverlay()

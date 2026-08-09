@@ -57,6 +57,10 @@ namespace CONFUSEDGAMEDEV.PollenGarden.UI
         [SerializeField]
         private Color buttonColor = new Color(0.22f, 0.34f, 0.20f, 1f);
 
+        [Tooltip("Quit button tint — set apart from the other rows so it is not hit by accident.")]
+        [SerializeField]
+        private Color quitButtonColor = new Color(0.34f, 0.20f, 0.18f, 1f);
+
         [SerializeField]
         private Color textColor = new Color(0.96f, 0.97f, 0.92f, 1f);
 
@@ -425,6 +429,28 @@ namespace CONFUSEDGAMEDEV.PollenGarden.UI
             (Button closeButton, TextMeshProUGUI closeLabel) =
                 CreateButton(menuRoot.transform, "Close", ToggleMenu);
             closeLabel.text = "Close";
+
+            (Button quitButton, TextMeshProUGUI quitLabel) =
+                CreateButton(menuRoot.transform, "Quit Pollen Garden", QuitGame);
+            quitLabel.text = "Quit Pollen Garden";
+            quitButton.targetGraphic.color = quitButtonColor;
+        }
+
+        /// <summary>
+        /// Leaves the game. The only way out on desktop: overlay mode is a borderless,
+        /// click-through window with no title bar, so there is no close box to reach for.
+        /// </summary>
+        /// <remarks>
+        /// No explicit save call — <c>Application.Quit</c> raises <c>OnApplicationQuit</c>, which
+        /// is where <c>SaveManager</c> already flushes. Calling both would just write twice.
+        /// </remarks>
+        public void QuitGame()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
 
         private void BuildSettings()
@@ -478,13 +504,6 @@ namespace CONFUSEDGAMEDEV.PollenGarden.UI
         {
             galleryRoot = CreatePanel(canvasTransform);
             galleryRoot.name = "PG_Gallery";
-
-            // Unlike the menu, this panel must size its children: with childControlHeight off a
-            // LayoutElement's flexibleHeight is ignored, the description keeps its own rect, and
-            // long placard text bleeds into whatever sits below it.
-            VerticalLayoutGroup galleryLayout = galleryRoot.GetComponent<VerticalLayoutGroup>();
-            galleryLayout.childControlHeight = true;
-            galleryLayout.childForceExpandHeight = false;
 
             galleryTitle = CreateLabel(galleryRoot.transform, "Gallery", TitleFontSize, FontStyles.Bold);
             galleryScientific = CreateLabel(galleryRoot.transform, string.Empty,
@@ -546,7 +565,11 @@ namespace CONFUSEDGAMEDEV.PollenGarden.UI
             layout.spacing = 16f;
             layout.childAlignment = TextAnchor.UpperCenter;
             layout.childControlWidth = true;
-            layout.childControlHeight = false;
+
+            // Must control height: with this off the group ignores every LayoutElement's
+            // preferredHeight, each row keeps its default 100px RectTransform, and a full menu
+            // overflows the panel — the bottom button ends up clipped off the window.
+            layout.childControlHeight = true;
             layout.childForceExpandWidth = true;
             layout.childForceExpandHeight = false;
 

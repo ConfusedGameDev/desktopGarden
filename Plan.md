@@ -130,7 +130,7 @@ SetExpanded(bool)
 | Implementation | Approach |
 |---|---|
 | **MacWindowPlatform (lead)** | Swift/Obj-C `.bundle` plugin. `NSWindow.isOpaque=false`, clear `backgroundColor`, `ignoresMouseEvents` toggling, floating level, `CollectionBehavior.canJoinAllSpaces`. `CAMetalLayer.isOpaque=false`; camera clears to alpha 0 |
-| WindowsWindowPlatform | P/Invoke user32/dwmapi: `DwmExtendFrameIntoClientArea`, `WS_EX_LAYERED`, dynamic `WS_EX_TRANSPARENT`, `HWND_TOPMOST` |
+| WindowsWindowPlatform | P/Invoke user32/dwmapi: `DwmExtendFrameIntoClientArea`, `WS_EX_LAYERED`, dynamic `WS_EX_TRANSPARENT`, `HWND_TOPMOST`. Player Settings must keep **Use DXGI Flip Model Swapchain off**, and `SetLayeredWindowAttributes` must never be called — either one discards the per-pixel alpha |
 | OpaquePlatform | No-op for mobile/MR |
 
 **Renderer warning:** URP post-FX can destroy the alpha channel → minimal post-FX + final alpha-preserving blit. Validate in M0 before any feature work.
@@ -185,8 +185,9 @@ Per frame in overlay mode: UI layer sends union of interactive screen rects (pet
   - [x] macOS: URP alpha-preserving output validated (flower visible over desktop) — flip `m_AllowPostProcessAlphaOutput` **and** `m_PrefilterAlphaOutput` on `PC_RPAsset`, camera clear → Solid Color alpha 0, verify in a *player* build not just the Editor *(verified in player build over the desktop, Aug 2026)*
   - [ ] Decide AA together with alpha (MSAA vs post-process AA vs none); re-evaluate whether SSAO earns its prepass on an unlit scene
   - [x] macOS: per-frame click-through toggling from screen rects *(`InteractiveScreenRects` + `ClickThroughManager` + `PG_TryGetCursorPixels` — the OS is asked for the cursor because a click-through window stops receiving mouse events; verified in player: petals clickable, desktop clicks pass through elsewhere)*
-  - [ ] Windows: same proof via P/Invoke
-  - [x] `IWindowPlatform` interface + all three implementations stubbed *(`Assets/01.Scripts/Platform/`: Mac real, Windows stub, Opaque no-op, plus `WindowModeManager`)*
+  - [x] Windows: transparent borderless overlay via P/Invoke *(`WindowsWindowPlatform`: `DwmExtendFrameIntoClientArea` sheet-of-glass + `WS_EX_LAYERED`, `WS_POPUP` borderless, `HWND_TOPMOST`; verified in a player build compositing over the live desktop, Aug 2026. **Requires `useFlipModelSwapchain: 0`** — DWM cannot composite a flip-model swapchain's alpha and the overlay renders over solid black)*
+  - [ ] Windows: verify per-frame click-through interactively (petals clickable, desktop clicks pass through elsewhere) — `WS_EX_TRANSPARENT` toggling is implemented but untested with a real cursor
+  - [x] `IWindowPlatform` interface + all three implementations *(`Assets/01.Scripts/Platform/`: Mac real, Windows real, Opaque no-op, plus `WindowModeManager`)*
   - **Exit:** flower quad over desktop, clicks pass through outside it, on both OSes
 
 - [ ] **M1 — Core loop** (build on Mac; verify opaque build on Windows)
